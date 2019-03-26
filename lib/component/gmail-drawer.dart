@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gmail/component/drawer-item.dart';
 
 class GmailDrawer extends StatefulWidget {
   GmailDrawer({
@@ -10,7 +11,6 @@ class GmailDrawer extends StatefulWidget {
 }
 
 class _GmailDrawerState extends State<GmailDrawer> {
-
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -32,58 +32,42 @@ class _GmailDrawerState extends State<GmailDrawer> {
             ),
           ),
           Divider(),
-          ListTile(
-            leading: Icon(Icons.inbox),
-            title: Text('Primary'),
+          DrawerItem(
+            leadingIcon: Icons.inbox,
+            text: 'Primary',
+            defaultSelected: true,
             onTap: () {
-              // change app state...
-              Navigator.pop(context); // close the drawer
+//              Navigator.pop(context);
             },
           ),
-          ListTile(
-            leading: Icon(Icons.group),
-            title: Text('Social'),
-            trailing: Container(
-              padding: EdgeInsets.only(
-                top: 4,
-                bottom: 4,
-                left: 9,
-                right: 9,
-              ),
-              decoration: BoxDecoration(
-                color: Colors.blue[700],
-                borderRadius: BorderRadius.circular(15.0),
-              ),
-              child: Text(
-                "3 new",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 11,
-                ),
-              ),
-            ),
+          DrawerItem(
+            leadingIcon: Icons.group,
+            text: 'Social',
+            isTrailing: true,
+            trailingText: '3 new',
             onTap: () {
-              // change app state...
-              Navigator.pop(context); // close the drawer
+//              Navigator.pop(context);
             },
           ),
-          ListTile(
-            leading: Icon(Icons.local_offer),
-            title: Text('Promotions'),
+          DrawerItem(
+            leadingIcon: Icons.local_offer,
+            text: 'Promotions',
+            isTrailing: true,
+            trailingText: '68 new',
+            trailingColor: Colors.green[600],
             onTap: () {
-              // change app state...
-              Navigator.pop(context); // close the drawer
+//              Navigator.pop(context);
             },
           ),
           Divider(
-            indent: 70,
+            indent: 55,
+            height: 1,
           ),
-          ListTile(
-            leading: Icon(Icons.star_border),
-            title: Text('Starred'),
+          DrawerItem(
+            leadingIcon: Icons.star_border,
+            text: 'Starred',
             onTap: () {
-              // change app state...
-              Navigator.pop(context); // close the drawer
+//              Navigator.pop(context);
             },
           ),
         ],
