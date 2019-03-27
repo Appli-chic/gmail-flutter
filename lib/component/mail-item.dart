@@ -24,6 +24,7 @@ class _MailItemState extends State<MailItem> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: EdgeInsets.only(left: 12, right: 12),
       margin: EdgeInsets.only(top: 14),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
