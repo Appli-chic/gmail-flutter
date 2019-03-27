@@ -8,7 +8,9 @@ class DrawerItem extends StatefulWidget {
     this.trailingText,
     this.trailingColor,
     this.onTap,
-    this.defaultSelected,
+    this.isSelected,
+    this.selectedColor,
+    this.backgroundColor,
     @required this.text,
   }) : super(key: key);
 
@@ -16,26 +18,35 @@ class DrawerItem extends StatefulWidget {
   final bool isTrailing;
   final String trailingText;
   final Color trailingColor;
+  final Color selectedColor;
+  final Color backgroundColor;
   final String text;
   final Function onTap;
-  final bool defaultSelected;
+  final bool isSelected;
 
   @override
   _DrawerItemState createState() => _DrawerItemState();
 }
 
 class _DrawerItemState extends State<DrawerItem> {
-  bool _isSelected = false;
-  Color _defaultTrailingColor = Colors.blue[700];
-  Color _defaultSelectedColor = Colors.red[600];
+  Color _trailingColor = Colors.blue[700];
+  Color _selectedColor = Colors.red[600];
+  Color _backgroundColor = Color(0xfff9e9e9);
+  bool _isPressed = false;
 
   @override
   void initState() {
     super.initState();
 
-    if (this.widget.defaultSelected != null && this.widget.defaultSelected) {
+    if (this.widget.backgroundColor != null) {
       this.setState(() {
-        _isSelected = true;
+        _backgroundColor = this.widget.backgroundColor;
+      });
+    }
+
+    if (this.widget.selectedColor != null) {
+      this.setState(() {
+        _selectedColor = this.widget.selectedColor;
       });
     }
   }
@@ -45,7 +56,7 @@ class _DrawerItemState extends State<DrawerItem> {
       return Container(
         child: Icon(
           this.widget.leadingIcon,
-          color: this._isSelected ? this._defaultSelectedColor : Colors.grey[600],
+          color: this.widget.isSelected ? this._selectedColor : Colors.grey[600],
         ),
       );
     } else {
@@ -65,7 +76,7 @@ class _DrawerItemState extends State<DrawerItem> {
         decoration: BoxDecoration(
           color: this.widget.trailingColor != null
               ? this.widget.trailingColor
-              : this._defaultTrailingColor,
+              : this._trailingColor,
           borderRadius: BorderRadius.circular(15.0),
         ),
         child: Text(
@@ -81,10 +92,18 @@ class _DrawerItemState extends State<DrawerItem> {
     }
   }
 
-  BoxDecoration _showBackgroundWhenSelected() {
-    if(this._isSelected) {
+  BoxDecoration _showBackground() {
+    if (this.widget.isSelected) {
       return BoxDecoration(
-        color: Color(0xfff9e9e9),
+        color: this._backgroundColor,
+        borderRadius: BorderRadius.only(
+          topRight: Radius.circular(30),
+          bottomRight: Radius.circular(30),
+        ),
+      );
+    } else if (this._isPressed){
+      return BoxDecoration(
+        color: this._backgroundColor,
         borderRadius: BorderRadius.only(
           topRight: Radius.circular(30),
           bottomRight: Radius.circular(30),
@@ -97,11 +116,22 @@ class _DrawerItemState extends State<DrawerItem> {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return GestureDetector(
       onTap: this.widget.onTap,
+      onTapDown: (TapDownDetails details) {
+        this.setState(() {
+          _isPressed = true;
+        });
+      },
+      onLongPressEnd: (LongPressEndDetails details) {
+        this.setState(() {
+          _isPressed = false;
+        });
+        this.widget.onTap();
+      },
       child: Container(
         margin: EdgeInsets.only(right: 6),
-        decoration: this._showBackgroundWhenSelected(),
+        decoration: this._showBackground(),
         padding: EdgeInsets.all(14),
         child: Row(
           children: <Widget>[
@@ -112,9 +142,10 @@ class _DrawerItemState extends State<DrawerItem> {
                 child: Text(
                   this.widget.text,
                   style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    color: this._isSelected ? this._defaultSelectedColor : Colors.grey[800]
-                  ),
+                      fontWeight: FontWeight.w500,
+                      color: this.widget.isSelected
+                          ? this._selectedColor
+                          : Colors.grey[800]),
                 ),
               ),
             ),

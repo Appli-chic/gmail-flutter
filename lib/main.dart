@@ -12,6 +12,12 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  int _itemSelected = 1;
+
+  _onSelectItem(int index) {
+    setState(() => _itemSelected = index);
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -24,7 +30,10 @@ class _MyHomePageState extends State<MyHomePage> {
             leading: Text(index.toString()),
           );
         },
-        drawer: GmailDrawer(),
+        drawer: GmailDrawer(
+          itemSelected: this._itemSelected,
+          onSelectItem: this._onSelectItem,
+        ),
       ),
     );
   }
