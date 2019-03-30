@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_color_avatar/flutter_color_avatar.dart';
 
 class FloatingSearchBar extends StatefulWidget {
   FloatingSearchBar({
@@ -130,7 +131,7 @@ class _FloatingSearchBarHeaderDelegate extends SliverPersistentHeaderDelegate {
                 margin: EdgeInsets.only(right: 8.0),
                 child: CircleAvatar(
                   maxRadius: 14,
-                  backgroundColor: Colors.red.shade500,
+                  backgroundColor: ColorAvatar.getColorFromName('AP'),
                   child: Text(
                     'AP',
                     style: TextStyle(

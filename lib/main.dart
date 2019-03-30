@@ -4,6 +4,7 @@ import 'package:gmail/component/gmail-drawer.dart';
 import 'package:gmail/component/mail-item.dart';
 import 'package:gmail/model/email-summary.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'package:flutter_color_avatar/flutter_color_avatar.dart';
 
 void main() => runApp(MyHomePage());
 
@@ -55,7 +56,7 @@ class _MyHomePageState extends State<MyHomePage> {
             final difference = now.difference(listEmails[index - 1].date.toLocal());
 
             return MailItem(
-              circleColor: Colors.red.shade400,
+              circleColor: ColorAvatar.getColorFromName(listEmails[index - 1].title),
               title: listEmails[index - 1].title,
               date: timeago.format(now.subtract(difference)),
               object: listEmails[index - 1].object,

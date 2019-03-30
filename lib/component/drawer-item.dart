@@ -56,7 +56,8 @@ class _DrawerItemState extends State<DrawerItem> {
       return Container(
         child: Icon(
           this.widget.leadingIcon,
-          color: this.widget.isSelected ? this._selectedColor : Colors.grey[600],
+          color: this.widget.isSelected ? this._selectedColor : Colors
+              .grey[600],
         ),
       );
     } else {
@@ -101,7 +102,7 @@ class _DrawerItemState extends State<DrawerItem> {
           bottomRight: Radius.circular(30),
         ),
       );
-    } else if (this._isPressed){
+    } else if (this._isPressed) {
       return BoxDecoration(
         color: this._backgroundColor,
         borderRadius: BorderRadius.only(
@@ -123,11 +124,10 @@ class _DrawerItemState extends State<DrawerItem> {
           _isPressed = true;
         });
       },
-      onLongPressEnd: (LongPressEndDetails details) {
+      onTapCancel: () {
         this.setState(() {
           _isPressed = false;
         });
-        this.widget.onTap();
       },
       child: Container(
         margin: EdgeInsets.only(right: 6),

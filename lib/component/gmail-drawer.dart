@@ -17,7 +17,6 @@ class GmailDrawer extends StatefulWidget {
 }
 
 class _GmailDrawerState extends State<GmailDrawer> {
-
   _onSelectItem(int index, BuildContext context) {
     Navigator.of(context).pop(); // close the drawer
     this.widget.onSelectItem(index);
