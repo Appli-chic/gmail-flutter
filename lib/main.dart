@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:gmail/screen/login-screen.dart';
 import 'package:gmail/screen/main-screen.dart';
 
@@ -20,6 +21,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarIconBrightness: Brightness.light
+    ));
+
     return MaterialApp(
       initialRoute: '/',
       routes: {

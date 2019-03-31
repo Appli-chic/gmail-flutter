@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:html_unescape/html_unescape.dart';
 
 class MailItem extends StatefulWidget {
   MailItem({
@@ -21,6 +22,8 @@ class MailItem extends StatefulWidget {
 }
 
 class _MailItemState extends State<MailItem> {
+  var _unescape = new HtmlUnescape();
+  
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -34,10 +37,10 @@ class _MailItemState extends State<MailItem> {
             maxRadius: 18,
             backgroundColor: this.widget.circleColor,
             child: Text(
-              this.widget.title.toUpperCase().substring(0, 2),
+              this._unescape.convert(this.widget.title).toUpperCase().substring(0, 1),
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 14.0,
+                fontSize: 17.0,
               ),
             ),
           ),
@@ -50,12 +53,19 @@ class _MailItemState extends State<MailItem> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Text(
-                        this.widget.title,
-                        style: TextStyle(
-                          color: Colors.black87,
-                          fontWeight: FontWeight.w300,
-                          fontSize: 15,
+                      Flexible(
+                        child: Container(
+                          margin: EdgeInsets.only(right: 16),
+                          child: Text(
+                            this._unescape.convert(this.widget.title),
+                            style: TextStyle(
+                              color: Colors.black87,
+                              fontWeight: FontWeight.w300,
+                              fontSize: 15,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
                       ),
                       Text(
@@ -79,7 +89,7 @@ class _MailItemState extends State<MailItem> {
                             Container(
                               margin: EdgeInsets.only(top: 5),
                               child: Text(
-                                this.widget.object,
+                                this._unescape.convert(this.widget.object),
                                 style: TextStyle(
                                   color: Colors.black87,
                                   fontWeight: FontWeight.w300,
@@ -87,12 +97,13 @@ class _MailItemState extends State<MailItem> {
                                 ),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.left,
                               ),
                             ),
                             Container(
                               margin: EdgeInsets.only(top: 2),
                               child: Text(
-                                this.widget.message,
+                                this._unescape.convert(this.widget.message),
                                 style: TextStyle(
                                   color: Colors.black87,
                                   fontWeight: FontWeight.w300,
@@ -100,6 +111,7 @@ class _MailItemState extends State<MailItem> {
                                 ),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.left,
                               ),
                             ),
                           ],
@@ -113,7 +125,7 @@ class _MailItemState extends State<MailItem> {
                         ),
                       ),
                     ],
-                  )
+                  ),
                 ],
               ),
             ),

@@ -45,14 +45,17 @@ class _MainScreenState extends State<MainScreen> {
   _getEmails() async {
     final storage = new FlutterSecureStorage();
     String value = await storage.read(key: USER_KEY);
-    User user = User.decodeJson(json.decode(value));
 
-    EmailServices.getInboxEmails(user.accessToken).then((emails) {
-      listEmails = emails;
-      this.setState((){});
-    }).catchError((err) {
+    if(value != null && value != "") {
+      User user = User.decodeJson(json.decode(value));
 
-    });
+      EmailServices.getInboxEmails(user.accessToken).then((emails) {
+        listEmails = emails;
+        this.setState((){});
+      }).catchError((err) {
+
+      });
+    }
   }
 
   @override
