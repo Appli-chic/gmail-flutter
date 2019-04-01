@@ -83,6 +83,38 @@ class AuthServices {
     }
   }
 
+  Future<String> refreshGoogleToken(String refreshToken) async {
+    var queryParameters = {
+      'client_id': this.googleClientId,
+      'client_secret': this.googleClientSecret,
+      'refresh_token': refreshToken,
+      'grant_type': 'refresh_token',
+    };
+
+    var uri = Uri.https('www.googleapis.com', '/oauth2/v4/token', queryParameters);
+
+    final response = await http.post(uri,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        });
+
+    if (response.statusCode == 200) {
+      final storage = new FlutterSecureStorage();
+      String accessToken = json.decode(response.body)['access_token'];
+      String value = await storage.read(key: USER_KEY);
+
+      if(value != null && value != "") {
+        User user = User.decodeJson(json.decode(value));
+        user.accessToken = accessToken;
+        await storage.write(key: USER_KEY, value: json.encode(user.toJson()));
+      }
+
+      return accessToken;
+    } else {
+      throw Exception('Error');
+    }
+  }
+
   setOauth2Info(String googleClientId, String googleClientSecret, String googleRedirectUri) {
     this.googleClientId = googleClientId;
     this.googleRedirectUri = googleRedirectUri;

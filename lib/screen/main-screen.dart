@@ -6,8 +6,10 @@ import 'package:gmail/component/gmail-drawer.dart';
 import 'package:gmail/component/mail-item.dart';
 import 'package:gmail/model/email-summary.dart';
 import 'package:gmail/model/user.dart';
+import 'package:gmail/service/auth-services.dart';
 import 'package:gmail/service/email-services.dart';
 import 'package:gmail/utils/constants.dart';
+import 'package:gmail/utils/environment.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:flutter_color_avatar/flutter_color_avatar.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -33,6 +35,7 @@ class _MainScreenState extends State<MainScreen> {
   int _itemSelected = 1;
 
   EmailServices _emailServices;
+  AuthServices _authServices;
 
   _onSelectItem(int index) {
     setState(() => _itemSelected = index);
@@ -43,6 +46,7 @@ class _MainScreenState extends State<MainScreen> {
     super.initState();
 
     this._emailServices = EmailServices();
+    this._authServices = AuthServices();
     this._getEmails();
   }
 
@@ -50,16 +54,27 @@ class _MainScreenState extends State<MainScreen> {
     final storage = new FlutterSecureStorage();
     String value = await storage.read(key: USER_KEY);
 
-    if(value != null && value != "") {
+    if (value != null && value != "") {
       User user = User.decodeJson(json.decode(value));
+      await this._loadAuthService();
+      String accessToken =
+          await this._authServices.refreshGoogleToken(user.refreshToken);
 
-      this._emailServices.getInboxEmails(user.accessToken, 20).then((emails) {
+      //TODO: Reorganize authServices and remove (s) to services
+
+      this._emailServices.getInboxEmails(accessToken, 20).then((emails) {
         listEmails = emails;
-        this.setState((){});
-      }).catchError((err) {
-
-      });
+        this.setState(() {});
+      }).catchError((err) {});
     }
+  }
+
+  _loadAuthService() async {
+    Environment environment =
+        await EnvironmentLoader(environmentPath: ".env.json").load();
+
+    this._authServices.setOauth2Info(environment.googleClientId,
+        environment.googleClientSecret, environment.googleRedirectUri);
   }
 
   @override
@@ -82,11 +97,11 @@ class _MainScreenState extends State<MainScreen> {
         } else {
           final now = new DateTime.now();
           final difference =
-          now.difference(listEmails[index - 1].date.toLocal());
+              now.difference(listEmails[index - 1].date.toLocal());
 
           return MailItem(
             circleColor:
-            ColorAvatar.getColorFromName(listEmails[index - 1].title),
+                ColorAvatar.getColorFromName(listEmails[index - 1].title),
             title: listEmails[index - 1].title,
             date: timeago.format(now.subtract(difference)),
             object: listEmails[index - 1].object,

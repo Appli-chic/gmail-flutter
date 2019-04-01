@@ -25,6 +25,7 @@ class _MyHomePageState extends State<MyHomePage> {
       statusBarIconBrightness: Brightness.light
     ));
 
+    // TODO: Better manage routing.
     return MaterialApp(
       initialRoute: '/',
       routes: {
