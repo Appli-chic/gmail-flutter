@@ -35,7 +35,6 @@ class _MyHomePageState extends State<MyHomePage> {
           return LoginScreen();
         },
       },
-      debugShowCheckedModeBanner: false,
       title: 'Gmail',
     );
   }

@@ -53,7 +53,7 @@ class _MainScreenState extends State<MainScreen> {
     if(value != null && value != "") {
       User user = User.decodeJson(json.decode(value));
 
-      this._emailServices.getInboxEmails(user.accessToken).then((emails) {
+      this._emailServices.getInboxEmails(user.accessToken, 20).then((emails) {
         listEmails = emails;
         this.setState((){});
       }).catchError((err) {
