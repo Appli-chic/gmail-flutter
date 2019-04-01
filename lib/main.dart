@@ -28,8 +28,12 @@ class _MyHomePageState extends State<MyHomePage> {
     return MaterialApp(
       initialRoute: '/',
       routes: {
-        '/': (_) => MainScreen(),
-        '/login': (_) => LoginScreen(),
+        '/': (_) {
+          return MainScreen();
+        },
+        '/login': (_) {
+          return LoginScreen();
+        },
       },
       debugShowCheckedModeBanner: false,
       title: 'Gmail',

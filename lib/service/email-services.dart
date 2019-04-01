@@ -4,7 +4,7 @@ import 'package:gmail/model/email-summary.dart';
 import 'package:http/http.dart' as http;
 
 class EmailServices {
-  static Future<List<EmailSummary>> getInboxEmails(String accessToken) async {
+  Future<List<EmailSummary>> getInboxEmails(String accessToken) async {
     List<EmailSummary> emailSummarylist = [];
 
     final responseEmailList = await http.get(

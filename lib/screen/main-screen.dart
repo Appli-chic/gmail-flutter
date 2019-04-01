@@ -32,6 +32,8 @@ var listEmails = [
 class _MainScreenState extends State<MainScreen> {
   int _itemSelected = 1;
 
+  EmailServices _emailServices;
+
   _onSelectItem(int index) {
     setState(() => _itemSelected = index);
   }
@@ -39,6 +41,8 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void initState() {
     super.initState();
+
+    this._emailServices = EmailServices();
     this._getEmails();
   }
 
@@ -49,7 +53,7 @@ class _MainScreenState extends State<MainScreen> {
     if(value != null && value != "") {
       User user = User.decodeJson(json.decode(value));
 
-      EmailServices.getInboxEmails(user.accessToken).then((emails) {
+      this._emailServices.getInboxEmails(user.accessToken).then((emails) {
         listEmails = emails;
         this.setState((){});
       }).catchError((err) {

@@ -1,3 +1,5 @@
+.env.json
+
 # Miscellaneous
 *.class
 *.log
@@ -14,6 +16,7 @@
 *.ipr
 *.iws
 .idea/
+android/.idea
 
 # Visual Studio Code related
 .vscode/
