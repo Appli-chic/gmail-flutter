@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' show parse;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-class AuthServices {
+class AuthService {
   String googleClientId;
   String googleRedirectUri;
   String googleClientSecret;

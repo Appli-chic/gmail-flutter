@@ -1,18 +1,14 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:gmail/component/floating-search-bar.dart';
 import 'package:gmail/component/gmail-drawer.dart';
 import 'package:gmail/component/mail-item.dart';
 import 'package:gmail/model/email-summary.dart';
 import 'package:gmail/model/user.dart';
-import 'package:gmail/service/auth-services.dart';
-import 'package:gmail/service/email-services.dart';
-import 'package:gmail/utils/constants.dart';
-import 'package:gmail/utils/environment.dart';
+import 'package:gmail/service/auth-service.dart';
+import 'package:gmail/service/email-service.dart';
+import 'package:gmail/utils/secure-storage-manager.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:flutter_color_avatar/flutter_color_avatar.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class MainScreen extends StatefulWidget {
   MainScreen({Key key}) : super(key: key);
@@ -34,8 +30,8 @@ var listEmails = [
 class _MainScreenState extends State<MainScreen> {
   int _itemSelected = 1;
 
-  EmailServices _emailServices;
-  AuthServices _authServices;
+  EmailService _emailService;
+  AuthService _authService;
 
   _onSelectItem(int index) {
     setState(() => _itemSelected = index);
@@ -45,36 +41,24 @@ class _MainScreenState extends State<MainScreen> {
   void initState() {
     super.initState();
 
-    this._emailServices = EmailServices();
-    this._authServices = AuthServices();
+    this._emailService = EmailService();
     this._getEmails();
   }
 
   _getEmails() async {
-    final storage = new FlutterSecureStorage();
-    String value = await storage.read(key: USER_KEY);
+    // TODO: Add linked files in the email preview list
+    // TODO: Better manage the errors in general
+    // TODO: Check if there is no user
+    // Refresh the access token
+    User user = await SecureStorageManager.retrieveUser();
+    this._authService = await SecureStorageManager.loadAuthService();
+    String accessToken = await this._authService.refreshGoogleToken(user.refreshToken);
 
-    if (value != null && value != "") {
-      User user = User.decodeJson(json.decode(value));
-      await this._loadAuthService();
-      String accessToken =
-          await this._authServices.refreshGoogleToken(user.refreshToken);
-
-      //TODO: Reorganize authServices and remove (s) to services
-
-      this._emailServices.getInboxEmails(accessToken, 20).then((emails) {
-        listEmails = emails;
-        this.setState(() {});
-      }).catchError((err) {});
-    }
-  }
-
-  _loadAuthService() async {
-    Environment environment =
-        await EnvironmentLoader(environmentPath: ".env.json").load();
-
-    this._authServices.setOauth2Info(environment.googleClientId,
-        environment.googleClientSecret, environment.googleRedirectUri);
+    // Retrieve the emails.
+    this._emailService.getInboxEmails(accessToken, 20).then((emails) {
+      listEmails = emails;
+      this.setState(() {});
+    }).catchError((err) {});
   }
 
   @override

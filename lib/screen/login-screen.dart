@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'package:gmail/service/auth-services.dart';
+import 'package:gmail/service/auth-service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
-import 'package:gmail/utils/environment.dart';
+import 'package:gmail/utils/secure-storage-manager.dart';
 
 class LoginScreen extends StatefulWidget {
   LoginScreen({Key key}) : super(key: key);
@@ -14,7 +14,7 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _flutterWebViewPlugin = new FlutterWebviewPlugin();
-  AuthServices _authServices;
+  AuthService _authService;
   bool _isAuthServiceLoaded;
 
   // On urlChanged stream
@@ -25,7 +25,6 @@ class _LoginScreenState extends State<LoginScreen> {
     super.initState();
 
     this._isAuthServiceLoaded = false;
-    this._authServices = AuthServices();
     this._loadAuthService();
 
     // Add a listener to on url changed
@@ -33,7 +32,7 @@ class _LoginScreenState extends State<LoginScreen> {
       if (mounted) {
         if (url.startsWith('https://accounts.google.com/o/oauth2/approval/')) {
           this._flutterWebViewPlugin.hide();
-          _authServices.retrieveGoogleCode(url).then((_) {
+          _authService.retrieveGoogleCode(url).then((_) {
             this._flutterWebViewPlugin.close();
           }).catchError((err) {});
         }
@@ -42,11 +41,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   _loadAuthService() async {
-    Environment environment =
-        await EnvironmentLoader(environmentPath: ".env.json").load();
-
-    this._authServices.setOauth2Info(environment.googleClientId,
-        environment.googleClientSecret, environment.googleRedirectUri);
+    this._authService = await SecureStorageManager.loadAuthService();
 
     this.setState(() {
       _isAuthServiceLoaded = true;
@@ -64,7 +59,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     if(this._isAuthServiceLoaded) {
       return WebviewScaffold(
-        url: _authServices.getGoogleOpenIdUrl(),
+        url: _authService.getGoogleOpenIdUrl(),
         appBar: AppBar(
           title: Text(
             'Connect to Gmail',

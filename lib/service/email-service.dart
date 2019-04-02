@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:gmail/model/email-summary.dart';
 import 'package:http/http.dart' as http;
 
-class EmailServices {
+class EmailService {
   Future<List<EmailSummary>> getInboxEmails(String accessToken, int nbMessages) async {
     List<EmailSummary> emailSummarylist = [];
 
