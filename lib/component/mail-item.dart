@@ -8,6 +8,7 @@ class MailItem extends StatefulWidget {
     this.date,
     this.object,
     this.message,
+    this.isRead,
     this.circleColor,
   }) : super(key: key);
 
@@ -15,6 +16,7 @@ class MailItem extends StatefulWidget {
   final String date;
   final String object;
   final String message;
+  final bool isRead;
   final Color circleColor;
 
   @override
@@ -60,7 +62,7 @@ class _MailItemState extends State<MailItem> {
                             this._unescape.convert(this.widget.title),
                             style: TextStyle(
                               color: Colors.black87,
-                              fontWeight: FontWeight.w300,
+                              fontWeight: this.widget.isRead ? FontWeight.w300 : FontWeight.bold,
                               fontSize: 15,
                             ),
                             maxLines: 1,
@@ -72,7 +74,7 @@ class _MailItemState extends State<MailItem> {
                         this.widget.date,
                         style: TextStyle(
                           color: Colors.black87,
-                          fontWeight: FontWeight.w300,
+                          fontWeight: this.widget.isRead ? FontWeight.w300 : FontWeight.bold,
                           fontSize: 12,
                         ),
                       ),
@@ -80,6 +82,7 @@ class _MailItemState extends State<MailItem> {
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.end,
                     children: <Widget>[
                       Flexible(
                         child: Column(
@@ -92,7 +95,7 @@ class _MailItemState extends State<MailItem> {
                                 this._unescape.convert(this.widget.object),
                                 style: TextStyle(
                                   color: Colors.black87,
-                                  fontWeight: FontWeight.w300,
+                                  fontWeight: this.widget.isRead ? FontWeight.w300 : FontWeight.bold,
                                   fontSize: 13,
                                 ),
                                 maxLines: 1,
@@ -101,7 +104,7 @@ class _MailItemState extends State<MailItem> {
                               ),
                             ),
                             Container(
-                              margin: EdgeInsets.only(top: 2),
+                              margin: EdgeInsets.only(top: 4),
                               child: Text(
                                 this._unescape.convert(this.widget.message),
                                 style: TextStyle(

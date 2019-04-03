@@ -24,6 +24,7 @@ var listEmails = [
     DateTime.now(),
     "Openbook Waitlist: Please Confirm Beta Access Waitlist",
     "Hey there, We hope you're having a great start of the weekend.",
+    false,
   ),
 ];
 
@@ -90,6 +91,7 @@ class _MainScreenState extends State<MainScreen> {
             date: timeago.format(now.subtract(difference)),
             object: listEmails[index - 1].object,
             message: listEmails[index - 1].message,
+            isRead: listEmails[index - 1].isRead,
           );
         }
       },

@@ -32,10 +32,18 @@ class EmailService {
           var message = json.decode(response.body);
           String object = "";
           String title = "";
+          bool isRead = true;
           DateTime date = DateTime.fromMillisecondsSinceEpoch(
               int.parse(message["internalDate"]));
 
           List<dynamic> headerList = message['payload']['headers'];
+          List<dynamic> labelList = message['labelIds'];
+
+          for(var label in labelList) {
+            if(label == 'UNREAD') {
+              isRead = false;
+            }
+          }
 
           for (var header in headerList) {
             if (header['name'].toString().toLowerCase() == 'subject') {
@@ -55,7 +63,7 @@ class EmailService {
           }
 
           emailSummarylist.add(EmailSummary(
-              message["id"], title, date, object, message["snippet"]));
+              message["id"], title, date, object, message["snippet"], isRead));
         } else {
           throw Exception('Error');
         }
