@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:gmail/model/email.dart';
+import 'package:gmail/model/file.dart';
 import 'package:http/http.dart' as http;
 
 class EmailService {
@@ -17,7 +18,7 @@ class EmailService {
       List<Future<http.Response>> futures = [];
 
       // Retrieve the full message
-      for(var message in emailList) {
+      for (var message in emailList) {
         futures.add(http.get(
             'https://www.googleapis.com/gmail/v1/users/me/messages/${message["id"]}?format=full',
             headers: {'Authorization': 'Bearer $accessToken'}));
@@ -27,20 +28,41 @@ class EmailService {
       var responses = await Future.wait(futures);
 
       // Process each emails to take the information that we want to keep
-      for(var response in responses) {
+      for (var response in responses) {
         if (response.statusCode == 200) {
           var message = json.decode(response.body);
           String object = "";
           String title = "";
+          List<File> attachedFileList = [];
           bool isRead = true;
           DateTime date = DateTime.fromMillisecondsSinceEpoch(
               int.parse(message["internalDate"]));
 
           List<dynamic> headerList = message['payload']['headers'];
+          List<dynamic> fileList = message['payload']['parts'];
           List<dynamic> labelList = message['labelIds'];
 
-          for(var label in labelList) {
-            if(label == 'UNREAD') {
+          if(fileList != null) {
+            for (var file in fileList) {
+              String fileName;
+              String mimeType;
+
+              if (file["filename"] != "") {
+                fileName = file["filename"];
+              }
+
+              if (file["mimeType"] != "") {
+                mimeType = file["mimeType"];
+              }
+
+              if (fileName != null && mimeType != null) {
+                attachedFileList.add(File(fileName, mimeType));
+              }
+            }
+          }
+
+          for (var label in labelList) {
+            if (label == 'UNREAD') {
               isRead = false;
             }
           }
@@ -52,7 +74,7 @@ class EmailService {
 
             if (header['name'].toString().toLowerCase() == 'from') {
               String value =
-              header['value'].toString().replaceAll(RegExp('\"'), "");
+                  header['value'].toString().replaceAll(RegExp('\"'), "");
 
               if (value.contains('<')) {
                 title = value.split('<')[0];
@@ -62,8 +84,8 @@ class EmailService {
             }
           }
 
-          emailSummarylist.add(Email(
-              message["id"], title, date, object, message["snippet"], isRead));
+          emailSummarylist.add(Email(message["id"], title, date, object,
+              message["snippet"], isRead, attachedFileList));
         } else {
           throw Exception('Error');
         }

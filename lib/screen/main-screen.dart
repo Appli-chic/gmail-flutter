@@ -23,6 +23,7 @@ var listEmails = [
     "Openbook Waitlist: Please Confirm Beta Access Waitlist",
     "Hey there, We hope you're having a great start of the weekend.",
     false,
+    [],
   ),
 ];
 

@@ -18,12 +18,37 @@ class MailItem extends StatefulWidget {
 
 class _MailItemState extends State<MailItem> {
   var _unescape = new HtmlUnescape();
-  
+
+  _displayFiles() {
+    if (this.widget.email.fileList.isNotEmpty) {
+      return ConstrainedBox(
+        constraints: BoxConstraints(
+          maxWidth: 150,
+        ),
+        child: Chip(
+          label: Text(
+            this.widget.email.fileList[0].filename,
+            style: TextStyle(
+              fontSize: 12,
+            ),
+          ),
+          padding: EdgeInsets.all(0),
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+            side: BorderSide(color: Colors.grey[300]),
+          ),
+        ),
+      );
+    } else {
+      return Container();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final now = new DateTime.now();
-    final difference =
-    now.difference(this.widget.email.date.toLocal());
+    final difference = now.difference(this.widget.email.date.toLocal());
 
     return Container(
       padding: EdgeInsets.only(left: 12, right: 12),
@@ -34,9 +59,14 @@ class _MailItemState extends State<MailItem> {
         children: <Widget>[
           CircleAvatar(
             maxRadius: 18,
-            backgroundColor: ColorAvatar.getColorFromName(this.widget.email.title),
+            backgroundColor:
+                ColorAvatar.getColorFromName(this.widget.email.title),
             child: Text(
-              this._unescape.convert(this.widget.email.title).toUpperCase().substring(0, 1),
+              this
+                  ._unescape
+                  .convert(this.widget.email.title)
+                  .toUpperCase()
+                  .substring(0, 1),
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 17.0,
@@ -47,6 +77,8 @@ class _MailItemState extends State<MailItem> {
             child: Container(
               margin: EdgeInsets.only(left: 16),
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -59,7 +91,9 @@ class _MailItemState extends State<MailItem> {
                             this._unescape.convert(this.widget.email.title),
                             style: TextStyle(
                               color: Colors.black87,
-                              fontWeight: this.widget.email.isRead ? FontWeight.w300 : FontWeight.bold,
+                              fontWeight: this.widget.email.isRead
+                                  ? FontWeight.w300
+                                  : FontWeight.bold,
                               fontSize: 15,
                             ),
                             maxLines: 1,
@@ -71,7 +105,9 @@ class _MailItemState extends State<MailItem> {
                         timeago.format(now.subtract(difference)),
                         style: TextStyle(
                           color: Colors.black87,
-                          fontWeight: this.widget.email.isRead ? FontWeight.w300 : FontWeight.bold,
+                          fontWeight: this.widget.email.isRead
+                              ? FontWeight.w300
+                              : FontWeight.bold,
                           fontSize: 12,
                         ),
                       ),
@@ -89,10 +125,14 @@ class _MailItemState extends State<MailItem> {
                             Container(
                               margin: EdgeInsets.only(top: 5),
                               child: Text(
-                                this._unescape.convert(this.widget.email.object),
+                                this
+                                    ._unescape
+                                    .convert(this.widget.email.object),
                                 style: TextStyle(
                                   color: Colors.black87,
-                                  fontWeight: this.widget.email.isRead ? FontWeight.w300 : FontWeight.bold,
+                                  fontWeight: this.widget.email.isRead
+                                      ? FontWeight.w300
+                                      : FontWeight.bold,
                                   fontSize: 13,
                                 ),
                                 maxLines: 1,
@@ -103,7 +143,9 @@ class _MailItemState extends State<MailItem> {
                             Container(
                               margin: EdgeInsets.only(top: 4),
                               child: Text(
-                                this._unescape.convert(this.widget.email.message),
+                                this
+                                    ._unescape
+                                    .convert(this.widget.email.message),
                                 style: TextStyle(
                                   color: Colors.black87,
                                   fontWeight: FontWeight.w300,
@@ -126,6 +168,7 @@ class _MailItemState extends State<MailItem> {
                       ),
                     ],
                   ),
+                  this._displayFiles(),
                 ],
               ),
             ),
