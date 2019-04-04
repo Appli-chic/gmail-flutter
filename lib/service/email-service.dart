@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:gmail/model/email-summary.dart';
+import 'package:gmail/model/email.dart';
 import 'package:http/http.dart' as http;
 
 class EmailService {
-  Future<List<EmailSummary>> getInboxEmails(String accessToken, int nbMessages) async {
-    List<EmailSummary> emailSummarylist = [];
+  Future<List<Email>> getInboxEmails(String accessToken, int nbMessages) async {
+    List<Email> emailSummarylist = [];
 
     final responseEmailList = await http.get(
         'https://www.googleapis.com/gmail/v1/users/me/messages?labelIds=INBOX&maxResults=$nbMessages&q=category:primary',
@@ -62,7 +62,7 @@ class EmailService {
             }
           }
 
-          emailSummarylist.add(EmailSummary(
+          emailSummarylist.add(Email(
               message["id"], title, date, object, message["snippet"], isRead));
         } else {
           throw Exception('Error');

@@ -2,13 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:gmail/component/floating-search-bar.dart';
 import 'package:gmail/component/gmail-drawer.dart';
 import 'package:gmail/component/mail-item.dart';
-import 'package:gmail/model/email-summary.dart';
+import 'package:gmail/model/email.dart';
 import 'package:gmail/model/user.dart';
 import 'package:gmail/service/auth-service.dart';
 import 'package:gmail/service/email-service.dart';
 import 'package:gmail/utils/secure-storage-manager.dart';
-import 'package:timeago/timeago.dart' as timeago;
-import 'package:flutter_color_avatar/flutter_color_avatar.dart';
 
 class MainScreen extends StatefulWidget {
   MainScreen({Key key}) : super(key: key);
@@ -18,7 +16,7 @@ class MainScreen extends StatefulWidget {
 }
 
 var listEmails = [
-  EmailSummary(
+  Email(
     "1",
     "Openbook",
     DateTime.now(),
@@ -53,7 +51,8 @@ class _MainScreenState extends State<MainScreen> {
     // Refresh the access token
     User user = await SecureStorageManager.retrieveUser();
     this._authService = await SecureStorageManager.loadAuthService();
-    String accessToken = await this._authService.refreshGoogleToken(user.refreshToken);
+    String accessToken =
+        await this._authService.refreshGoogleToken(user.refreshToken);
 
     // Retrieve the emails.
     this._emailService.getInboxEmails(accessToken, 20).then((emails) {
@@ -80,18 +79,8 @@ class _MainScreenState extends State<MainScreen> {
             ),
           );
         } else {
-          final now = new DateTime.now();
-          final difference =
-              now.difference(listEmails[index - 1].date.toLocal());
-
           return MailItem(
-            circleColor:
-                ColorAvatar.getColorFromName(listEmails[index - 1].title),
-            title: listEmails[index - 1].title,
-            date: timeago.format(now.subtract(difference)),
-            object: listEmails[index - 1].object,
-            message: listEmails[index - 1].message,
-            isRead: listEmails[index - 1].isRead,
+            email: listEmails[index - 1],
           );
         }
       },
