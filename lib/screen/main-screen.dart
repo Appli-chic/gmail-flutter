@@ -4,6 +4,7 @@ import 'package:gmail/component/gmail-drawer.dart';
 import 'package:gmail/component/mail-item.dart';
 import 'package:gmail/model/email.dart';
 import 'package:gmail/model/user.dart';
+import 'package:gmail/screen/login-screen.dart';
 import 'package:gmail/service/auth-service.dart';
 import 'package:gmail/service/email-service.dart';
 import 'package:gmail/utils/secure-storage-manager.dart';
@@ -51,6 +52,17 @@ class _MainScreenState extends State<MainScreen> {
     // TODO: Check if there is no user
     // Refresh the access token
     User user = await SecureStorageManager.retrieveUser();
+
+    if (user == null) {
+      await Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => LoginScreen()),
+        (_) => false,
+      );
+
+      user = await SecureStorageManager.retrieveUser();
+    }
+
     this._authService = await SecureStorageManager.loadAuthService();
     String accessToken =
         await this._authService.refreshGoogleToken(user.refreshToken);

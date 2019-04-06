@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:gmail/screen/login-screen.dart';
 import 'package:gmail/screen/main-screen.dart';
 
 void main() => runApp(MyHomePage());
@@ -25,16 +24,12 @@ class _MyHomePageState extends State<MyHomePage> {
       statusBarIconBrightness: Brightness.light
     ));
 
-    // TODO: Better manage routing.
     return MaterialApp(
       initialRoute: '/',
       routes: {
         '/': (_) {
           return MainScreen();
-        },
-        '/login': (_) {
-          return LoginScreen();
-        },
+        }
       },
       title: 'Gmail',
     );

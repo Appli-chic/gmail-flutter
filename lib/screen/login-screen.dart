@@ -34,7 +34,11 @@ class _LoginScreenState extends State<LoginScreen> {
           this._flutterWebViewPlugin.hide();
           _authService.retrieveGoogleCode(url).then((_) {
             this._flutterWebViewPlugin.close();
-          }).catchError((err) {});
+            Navigator.pop(context);
+          }).catchError((err) {
+            this._flutterWebViewPlugin.close();
+            Navigator.pop(context);
+          });
         }
       }
     });
@@ -57,7 +61,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if(this._isAuthServiceLoaded) {
+    if (this._isAuthServiceLoaded) {
       return WebviewScaffold(
         url: _authService.getGoogleOpenIdUrl(),
         appBar: AppBar(
