@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:gmail/component/floating-search-bar.dart';
 import 'package:gmail/component/gmail-drawer.dart';
 import 'package:gmail/component/mail-item.dart';
@@ -47,9 +48,7 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   _getEmails() async {
-    // TODO: Add linked files in the email preview list
     // TODO: Better manage the errors in general
-    // TODO: Check if there is no user
     // Refresh the access token
     User user = await SecureStorageManager.retrieveUser();
 

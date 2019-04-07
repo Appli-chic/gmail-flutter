@@ -21,7 +21,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarIconBrightness: Brightness.light
+      statusBarIconBrightness: Brightness.light,
     ));
 
     return MaterialApp(
