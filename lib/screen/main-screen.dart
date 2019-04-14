@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:gmail/component/floating-search-bar.dart';
 import 'package:gmail/component/gmail-drawer.dart';
 import 'package:gmail/component/mail-item.dart';
 import 'package:gmail/model/email.dart';
 import 'package:gmail/model/user.dart';
+import 'package:gmail/screen/email-screen.dart';
 import 'package:gmail/screen/login-screen.dart';
 import 'package:gmail/service/auth-service.dart';
 import 'package:gmail/service/email-service.dart';
@@ -73,6 +73,17 @@ class _MainScreenState extends State<MainScreen> {
     }).catchError((err) {});
   }
 
+  onEmailTap(Email email) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => EmailScreen(
+              email: email,
+            ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return FloatingSearchBar(
@@ -93,6 +104,7 @@ class _MainScreenState extends State<MainScreen> {
         } else {
           return MailItem(
             email: listEmails[index - 1],
+            onTap: this.onEmailTap,
           );
         }
       },

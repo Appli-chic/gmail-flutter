@@ -30,6 +30,7 @@ dependencies:
   html: ^0.13.4+1
   flutter_secure_storage: ^3.2.1+1
   html_unescape: ^1.0.1+2
+  webview_flutter: ^0.3.5+3
 
 dev_dependencies:
   flutter_test:

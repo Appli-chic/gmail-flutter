@@ -33,10 +33,15 @@ class EmailService {
           var message = json.decode(response.body);
           String object = "";
           String title = "";
+          String body = "";
           List<File> attachedFileList = [];
           bool isRead = true;
           DateTime date = DateTime.fromMillisecondsSinceEpoch(
               int.parse(message["internalDate"]));
+
+          if(message["payload"]["body"] != null && message["payload"]["body"]["data"] != null) {
+            body = message["payload"]["body"]["data"];
+          }
 
           List<dynamic> headerList = message['payload']['headers'];
           List<dynamic> fileList = message['payload']['parts'];
@@ -85,7 +90,7 @@ class EmailService {
           }
 
           emailSummarylist.add(Email(message["id"], title, date, object,
-              message["snippet"], isRead, attachedFileList));
+              body, isRead, attachedFileList));
         } else {
           throw Exception('Error');
         }
