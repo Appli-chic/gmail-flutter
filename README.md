@@ -1,6 +1,6 @@
 # gmail
 
-A new Flutter Gmaik
+A new Flutter Gmail
 
 ## Getting Started
 
